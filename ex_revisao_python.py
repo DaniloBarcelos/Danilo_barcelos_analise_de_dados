@@ -106,7 +106,16 @@ print(f"Quantidade de caracteres: {len(frase)}")
 # Exercício 10 — Preço com desconto
 # Leia o nome de um produto, seu preço e um percentual de desconto.
 # Calcule e mostre o nome do produto, o valor do desconto e o preço final.
+produto = input("Digite o nome do produto: ")
+preco = float(input("Digite o preço do produto: "))
+desconto = float(input("Digite o percentual de desconto: "))
 
+valor_desconto = preco * desconto / 100
+preco_final = preco - valor_desconto
+
+print(f"Produto: {produto}")
+print(f"Valor do desconto: R$ {valor_desconto:.2f}")
+print(f"Preço final: R$ {preco_final:.2f}")
 
 # ============================================================================
 # 2. ESTRUTURA CONDICIONAL — EXERCÍCIOS 11 A 20
@@ -114,28 +123,36 @@ print(f"Quantidade de caracteres: {len(frase)}")
 
 # Exercício 11 — Positivo, negativo ou zero
 # Leia um número e informe se ele é positivo, negativo ou igual a zero.
- numero = 10
- if numero > 0:
-   print("o numero é positivo")
- elif numero < 0:
-    print("o numero é negativo")
- else: 
-    print("o numero é zero")
+numero = int(input("Digite o número: "))
+
+if numero > 0:
+    print("O número é positivo")
+elif numero < 0:
+    print("O número é negativo")
+else:
+    print("O número é zero")
  
 
 # Exercício 12 — Par ou ímpar
 # Leia um número inteiro e informe se ele é par ou ímpar.
 # Dica: use o operador de resto da divisão (%).
- numero = 11
+numero = int(input("Digite o número: "))
 resto = numero % 2
- if resto == 0:
-   print("o numero é par")
- else: 
-    print("o numero é impar")
+
+if resto == 0:
+  print("O número é par")
+else:
+   print("O número é ímpar")
 
 # Exercício 13 — Aprovação
 # Leia a média de um aluno. Mostre "Aprovado" se a média for maior ou igual
 # a 7 e "Reprovado" caso contrário.
+media = float(input("Digite a média do aluno: "))
+
+if media >= 7:
+    print("Aprovado")
+else:
+    print("Reprovado")
 
 
 # Exercício 14 — Aprovação com recuperação
@@ -144,10 +161,26 @@ resto = numero % 2
 # - "Recuperação", se a média estiver entre 5 e 6.9;
 # - "Reprovado", se a média for menor que 5.
 
+media = float(input("Digite a média do aluno: "))
+
+if media >= 7:
+    print("Aprovado")
+elif media >= 5:
+    print("Recuperação")
+else:
+    print("Reprovado")
 
 # Exercício 15 — Maior entre dois números
 # Leia dois números e mostre qual é o maior. Se forem iguais, informe isso.
+n1 = float(input("Digite o primeiro número: "))
+n2 = float(input("Digite o segundo número: "))
 
+if n1 > n2:
+    print(f"O maior número é {n1}")
+elif n2 > n1:
+    print(f"O maior número é {n2}")
+else:
+    print("Os números são iguais")
 
 # Exercício 16 — Faixa etária
 # Leia a idade de uma pessoa e classifique-a como:
@@ -155,29 +188,75 @@ resto = numero % 2
 # - "Adolescente": de 12 a 17 anos;
 # - "Adulto": de 18 a 59 anos;
 # - "Idoso": 60 anos ou mais.
+idade = int(input("Digite a idade: "))
 
+if idade <= 11:
+    print("Criança")
+elif idade <= 17:
+    print("Adolescente")
+elif idade <= 59:
+    print("Adulto")
+else:
+    print("Idoso")
 
 # Exercício 17 — Desconto na compra
 # Leia o valor de uma compra. Se o valor for maior que R$ 100,00, aplique
 # desconto de 10%. Caso contrário, mantenha o valor original. Mostre o total.
+valor = float(input("Digite o valor da compra: "))
 
+if valor > 100:
+    total = valor * 0.9
+else:
+    total = valor
+
+print(f"Total a pagar: R$ {total:.2f}")
 
 # Exercício 18 — Acesso ao sistema
 # Leia o nome de usuário e a senha. Mostre "Acesso permitido" somente quando
 # o usuário for "admin" e a senha for "1234". Caso contrário, mostre
 # "Acesso negado".
 
+usuario = input("Digite o usuário: ")
+senha = input("Digite a senha: ")
+
+if usuario == "admin" and senha == "1234":
+    print("Acesso permitido")
+else:
+    print("Acesso negado")
+
 
 # Exercício 19 — Número dentro do intervalo
 # Leia um número e informe se ele está entre 10 e 50, incluindo os limites.
 # Use os operadores and, >= e <=.
+numero = float(input("Digite um número: "))
 
+if numero >= 10 and numero <= 50:
+    print("O número está no intervalo")
+else:
+    print("O número está fora do intervalo")
 
 # Exercício 20 — Calculadora simples
 # Leia dois números e uma operação (+, -, * ou /). Use if/elif/else para
 # realizar a operação escolhida e mostrar o resultado. Não permita divisão
 # por zero.
+# Exercício 20 — Calculadora simples
+n1 = float(input("Digite o primeiro número: "))
+n2 = float(input("Digite o segundo número: "))
+operacao = input("Digite a operação (+, -, * ou /): ")
 
+if operacao == "+":
+    print(f"Resultado: {n1 + n2}")
+elif operacao == "-":
+    print(f"Resultado: {n1 - n2}")
+elif operacao == "*":
+    print(f"Resultado: {n1 * n2}")
+elif operacao == "/":
+    if n2 == 0:
+        print("Não é possível dividir por zero")
+    else:
+        print(f"Resultado: {n1 / n2}")
+else:
+    print("Operação inválida")
 
 # ============================================================================
 # 3. LISTAS — EXERCÍCIOS 21 A 30
@@ -302,26 +381,49 @@ for n in range (0,11):
 # Exercício 41 — Criando um dicionário
 # Crie um dicionário chamado aluno com as chaves "nome", "idade" e "curso".
 # Preencha com valores fictícios e mostre o dicionário completo.
-
+aluno = {
+    "nome": "Danilo Barcelos",
+    "idade": 25,
+    "curso": "Análise de Dados"
+}
+print(aluno)
 
 # Exercício 42 — Acessando valores
 # Dado o dicionário abaixo, mostre separadamente o nome e o preço do produto.
 # produto = {"nome": "Teclado", "preco": 150.0, "estoque": 8}
 
+produto = {"nome": "Teclado", "preco": 150.0, "estoque": 8}
+
+print(f"Nome: {produto['nome']}")
+print(f"Preço: R$ {produto['preco']:.2f}")
 
 # Exercício 43 — Adicionando uma chave
 # Adicione a chave "marca" ao dicionário abaixo e mostre o resultado.
 # produto = {"nome": "Mouse", "preco": 80.0}
+produto = {"nome": "Mouse", "preco": 80.0}
 
+produto["marca"] = "Logitech"
+
+print(produto)
 
 # Exercício 44 — Atualizando um valor
 # Altere o estoque do produto abaixo para 15 unidades e mostre o dicionário.
 # produto = {"nome": "Monitor", "preco": 900.0, "estoque": 5}
+produto = {"nome": "Monitor", "preco": 900.0, "estoque": 5}
 
+produto["estoque"] = 15
+
+print(produto)
 
 # Exercício 45 — Removendo uma chave
 # Remova a chave "cor" do dicionário abaixo usando pop() e mostre o resultado.
 # carro = {"marca": "Ford", "modelo": "Ka", "ano": 2020, "cor": "prata"}
+# Exercício 45 — Removendo uma chave
+carro = {"marca": "Ford", "modelo": "Ka", "ano": 2020, "cor": "prata"}
+
+carro.pop("cor")
+
+print(carro)
 
 
 # Exercício 46 — Verificando uma chave
@@ -329,11 +431,22 @@ for n in range (0,11):
 # mensagem informando o resultado.
 # contato = {"nome": "Marina", "email": "marina@email.com"}
 
+contato = {"nome": "Marina", "email": "marina@email.com"}
+
+if "telefone" in contato:
+    print("A chave 'telefone' existe")
+else:
+    print("A chave 'telefone' não existe")
 
 # Exercício 47 — Chaves e valores
 # Use keys() para mostrar todas as chaves e values() para mostrar todos os
 # valores do dicionário abaixo.
 # capitais = {"Brasil": "Brasília", "Argentina": "Buenos Aires", "Chile": "Santiago"}
+
+capitais = {"Brasil": "Brasília", "Argentina": "Buenos Aires", "Chile": "Santiago"}
+
+print(f"Chaves: {capitais.keys()}")
+print(f"Valores: {capitais.values()}")
 
 
 # Exercício 48 — Percorrendo um dicionário
