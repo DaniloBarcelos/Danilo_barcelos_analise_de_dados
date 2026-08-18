@@ -1,0 +1,19 @@
+[project]
+name = "danilo-barcelos-analise-de-dados"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Danilo Barcelos", email = "202308875965@alunos.ibmec.edu.br" }
+]
+requires-python = ">=3.14"
+dependencies = [
+    "pandas>=3.0.5",
+]
+
+[project.scripts]
+danilo-barcelos-analise-de-dados = "danilo_barcelos_analise_de_dados:main"
+
+[build-system]
+requires = ["uv_build>=0.12.5,<0.13.0"]
+build-backend = "uv_build"

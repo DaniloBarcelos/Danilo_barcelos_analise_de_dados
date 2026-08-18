@@ -75,7 +75,8 @@ print(total)
 
 # Exercício 6 — Idade no futuro
 # Peça a idade atual do usuário e informe quantos anos ele terá daqui a 10 anos.
-
+idade_atual = int(input("Digite a sua idade: "))
+print(f"Daqui a 10 anos você terá {idade_atual + 10} anos.")
 
 # Exercício 7 — Conversão de temperatura
 # Leia uma temperatura em graus Celsius e converta para Fahrenheit.
@@ -87,14 +88,20 @@ print(fahrenheit)
 # Exercício 8 — Área de um retângulo
 # Leia a largura e a altura de um retângulo. Calcule e mostre sua área.
 # Fórmula: area = largura * altura
-
+largura = float(input("Digite a largura do retângulo: "))
+altura = float(input("Digite a altura do retângulo: "))
+area = largura * altura
+print(f"A área do retângulo é {area:.2f}")
 
 # Exercício 9 — Manipulação de texto
 # Peça uma frase ao usuário e mostre:
+frase = input("Digite uma frase: ")
 # a) a frase em letras maiúsculas;
+print(f"Maiúsculas: {frase.upper()}")
 # b) a frase em letras minúsculas;
+print(f"Minúsculas: {frase.lower()}")
 # c) a quantidade de caracteres da frase.
-
+print(f"Quantidade de caracteres: {len(frase)}")
 
 # Exercício 10 — Preço com desconto
 # Leia o nome de um produto, seu preço e um percentual de desconto.
@@ -179,12 +186,15 @@ resto = numero % 2
 # Exercício 21 — Criando uma lista
 # Crie uma lista com as frutas "maçã", "banana", "laranja" e "uva".
 # Mostre a lista completa.
+frutas = ["maçã", "banana", "laranja"]
 
 
 # Exercício 22 — Acessando elementos
 # Usando a lista abaixo, mostre o primeiro e o último elemento.
 # cores = ["azul", "verde", "amarelo", "vermelho"]
-
+cores = ["azul", "verde", "rosa"]
+cores [0]
+cores [-1]
 
 # Exercício 23 — Adicionando elementos
 # Crie uma lista com três nomes. Peça outro nome ao usuário, adicione-o ao
@@ -238,7 +248,8 @@ resto = numero % 2
 
 # Exercício 31 — Números de 1 a 10
 # Use um laço for e range() para mostrar os números de 1 a 10.
-
+for n in range (0,11): 
+          print(n)
 
 # Exercício 32 — Números pares
 # Use um laço for para mostrar apenas os números pares de 2 a 20.
