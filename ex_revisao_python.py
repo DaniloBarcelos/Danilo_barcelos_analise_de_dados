@@ -278,39 +278,74 @@ cores [-1]
 # Exercício 23 — Adicionando elementos
 # Crie uma lista com três nomes. Peça outro nome ao usuário, adicione-o ao
 # final da lista com append() e mostre a lista atualizada.
+nomes = ["Danilo", "Laerte", "Fred"]
+
+novo_nome = input("Digite outro nome: ")
+
+nomes.append(novo_nome)
+
+print("Lista atualizada:", nomes)
 
 
 # Exercício 24 — Removendo elementos
 # Dada a lista abaixo, remova "banana" com remove() e mostre o resultado.
 # frutas = ["maçã", "banana", "laranja", "uva"]
+frutas = ["maçã", "banana", "laranja", "uva"]
 
+frutas.remove("banana")
+
+print(frutas)
 
 # Exercício 25 — Alterando um elemento
 # Dada a lista abaixo, substitua "laranja" por "abacaxi" usando seu índice.
 # frutas = ["maçã", "banana", "laranja", "uva"]
+frutas = ["maçã", "banana", "laranja", "uva"]
+
+frutas[2] = "abacaxi"
+
+print(frutas)
 
 
 # Exercício 26 — Tamanho e presença
 # Dada a lista abaixo, mostre a quantidade de elementos e verifique se
 # o número 30 pertence à lista.
 # numeros = [10, 20, 30, 40, 50]
+numeros = [10, 20, 30, 40, 50]
+
+print(len(numeros))
+
+print(30 in numeros)
 
 
 # Exercício 27 — Soma, maior e menor
 # Dada a lista abaixo, mostre a soma, o maior valor e o menor valor usando
 # sum(), max() e min().
 # valores = [12, 5, 28, 9, 17]
+valores = [12, 5, 28, 9, 17]
 
+print(sum(valores))
+print(max(valores))
+print(min(valores))
 
 # Exercício 28 — Ordenação
 # Coloque a lista abaixo em ordem alfabética usando sort() e mostre o resultado.
 # cidades = ["Curitiba", "Salvador", "Recife", "Goiânia", "Manaus"]
+cidades = ["Curitiba", "Salvador", "Recife", "Goiânia", "Manaus"]
 
+cidades.sort()
+
+print(cidades)
 
 # Exercício 29 — Concatenação
 # Una as duas listas abaixo em uma terceira lista e mostre o resultado.
 # lista_a = [1, 2, 3]
 # lista_b = [4, 5, 6]
+lista_a = [1, 2, 3]
+lista_b = [4, 5, 6]
+
+lista_c = lista_a + lista_b
+
+print(lista_c)
 
 
 # Exercício 30 — Fatiamento
@@ -319,7 +354,11 @@ cores [-1]
 # b) os três últimos números;
 # c) os números do índice 2 ao índice 5.
 # numeros = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+numeros = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 
+print(numeros[:3])
+print(numeros[-3:])
+print(numeros[2:6])
 
 # ============================================================================
 # 4. ESTRUTURAS DE REPETIÇÃO — EXERCÍCIOS 31 A 40
@@ -332,46 +371,98 @@ for n in range (0,11):
 
 # Exercício 32 — Números pares
 # Use um laço for para mostrar apenas os números pares de 2 a 20.
-
+for numero in range(2, 21, 2):
+    print(numero)
 
 # Exercício 33 — Percorrendo nomes
 # Use um laço for para mostrar cada nome da lista abaixo em uma linha.
 # nomes = ["Ana", "Bruno", "Carla", "Diego"]
+nomes = ["Ana", "Bruno", "Carla", "Diego"]
 
+for nome in nomes:
+    print(nome)
 
 # Exercício 34 — Quadrados
 # Use um laço for para criar uma nova lista contendo o quadrado de cada número.
 # numeros = [1, 2, 3, 4, 5]
+numeros = [1, 2, 3, 4, 5]
 
+quadrados = []
+
+for numero in numeros:
+    quadrados.append(numero ** 2)
+
+print(quadrados)
 
 # Exercício 35 — Soma com for
 # Use um laço for e uma variável acumuladora para somar os valores abaixo.
 # Não use a função sum().
 # valores = [10, 20, 30, 40, 50]
+valores = [10, 20, 30, 40, 50]
+
+soma = 0
+
+for valor in valores:
+    soma = soma + valor
+
+print(soma)
 
 
 # Exercício 36 — Contando aprovados
 # Percorra a lista e conte quantas notas são maiores ou iguais a 7.
 # notas = [8.0, 5.5, 7.0, 9.2, 4.0, 6.8]
+notas = [8.0, 5.5, 7.0, 9.2, 4.0, 6.8]
+
+aprovados = 0
+
+for nota in notas:
+    if nota >= 7:
+        aprovados = aprovados + 1
+
+print(aprovados)
 
 
 # Exercício 37 — Contagem com while
 # Use um laço while para mostrar os números de 1 a 10.
+numero = 1
+
+while numero <= 10:
+    print(numero)
+    numero = numero + 1
 
 
 # Exercício 38 — Contagem regressiva
 # Use um laço while para fazer uma contagem regressiva de 10 até 1.
 # Ao terminar, mostre a mensagem "Fim!".
+numero = 10
 
+while numero >= 1:
+    print(numero)
+    numero = numero - 1
+
+print("Fim!")
 
 # Exercício 39 — Senha correta
 # Peça uma senha ao usuário repetidamente usando while. O programa deve parar
 # somente quando a senha digitada for "python123".
+senha = ""
 
+while senha != "python123":
+    senha = input("Digite a senha: ")
+
+print("Senha correta!")
 
 # Exercício 40 — Somando até zero
 # Peça números inteiros ao usuário e some os valores digitados. Use while para
 # continuar a leitura até que o usuário digite 0. Ao final, mostre a soma.
+soma = 0
+numero = int(input("Digite um número: "))
+
+while numero != 0:
+    soma = soma + numero
+    numero = int(input("Digite outro número: "))
+
+print("Soma:", soma)
 
 
 # ============================================================================
@@ -452,14 +543,43 @@ print(f"Valores: {capitais.values()}")
 # Exercício 48 — Percorrendo um dicionário
 # Use um laço for e items() para mostrar o nome de cada produto e seu preço.
 # produtos = {"caderno": 25.0, "caneta": 4.5, "mochila": 120.0}
+produtos = {
+    "caderno": 25.0,
+    "caneta": 4.5,
+    "mochila": 120.0
+}
+
+for produto, preco in produtos.items():
+    print(produto, preco)
 
 
 # Exercício 49 — Soma dos valores
 # Calcule a soma de todas as quantidades do dicionário abaixo e mostre o total.
 # estoque = {"notebook": 5, "mouse": 20, "teclado": 12, "monitor": 4}
+estoque = {
+    "notebook": 5,
+    "mouse": 20,
+    "teclado": 12,
+    "monitor": 4
+}
+
+total = sum(estoque.values())
+
+print(total)
 
 
 # Exercício 50 — Frequência de palavras
 # Percorra a lista abaixo e crie um dicionário que conte quantas vezes cada
 # palavra aparece. Ao final, mostre o dicionário de frequências.
 # palavras = ["python", "dados", "python", "lista", "dados", "python"]
+palavras = ["python", "dados", "python", "lista", "dados", "python"]
+
+frequencia = {}
+
+for palavra in palavras:
+    if palavra in frequencia:
+        frequencia[palavra] = frequencia[palavra] + 1
+    else:
+        frequencia[palavra] = 1
+
+print(frequencia)
