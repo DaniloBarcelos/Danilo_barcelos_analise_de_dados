@@ -121,37 +121,47 @@ df["faltas"].max()
 
 
 
+# 9. FILTROS
+
+# 47. Quantos estudantes possuem nota inferior a 7?
+filtro = df["nota_final"] < 7
+col = ["aluno", "nota_final"]
+df_menor_7 = df[filtro][col]
+df_menor_7.shape[0]
+# 48. Quantos estudantes possuem mais de 10 faltas?
+filtro = df["faltas"] > 10
+col = ["aluno", "nota_final", "faltas"]
+df_mais_10_faltas = df[filtro][col]
+df_mais_10_faltas.shape[0]
+# 49. Quantos estudantes possuem nota inferior a 7 e mais de 10 faltas?
+filtro = (df["nota_final"] < 7) & (df["faltas"] > 10)
+col = ["aluno", "nota_final", "faltas"]
+df_pior = df[filtro][col]
+df_pior.shape[0]
+# 50. Todos os estudantes com nota baixa possuem muitas faltas?
+df_menor_7.shape[0]
+df_pior.shape[0]
+"Não, pois existem alunos com nota menor que 7 e com faltas inferiores ou iguais a 10."
 
 
+#10. ORDENAÇÃO DOS DADOS
+#51. Quem são os cinco estudantes com maiores notas?
+col = ["aluno", "nota_final"]
+df[col].sort_values(by="nota_final", ascending=False).head(5)
+#52. Os estudantes com menores notas possuem necessariamente muitas faltas?
+col = ["aluno", "nota_final", "faltas"]
+df_menores_notas = df[col].sort_values(by="nota_final", ascending=True).head(5)
+df_menores_notas
 
+#11. ANÁLISE POR GRUPOS
+#53. Existe diferença relevante entre as médias dos cursos?
+df.groupby("curso")["nota_final"].mean()
+#54. Qual período apresenta maior média?
+#55. Estudantes que participaram da monitoria apresentam média maior?
+df.groupby("periodo")["nota_final"].mean().sort_values(ascending=False)
+#56. Podemos afirmar que a monitoria causou o aumento das notas? Explique.
+"Nao podemos"
 
-
-
-
-
-
-# 36. Quantos possíveis outliers foram encontrados para faltas pelo método do intervalo interquartil?
-
-Q1 = df["faltas"].quantile(0.25)
-Q3 = df["faltas"].quantile(0.75)
-
-IQR = Q3 - Q1
-
-limite_inferior = Q1 - 1.5 * IQR
-limite_superior = Q3 + 1.5 * IQR
-
-outliers_faltas = df[
-    (df["faltas"] < limite_inferior) |
-    (df["faltas"] > limite_superior)
-]
-
-outliers_faltas.shape[0]
-
-
-# 37. Qual é o maior número de faltas?
-df["faltas"].max()
-
-
-# 38. Um valor identificado como outlier deve ser automaticamente removido? Justifique.
-
-"Não. Um outlier não deve ser removido automaticamente, pois ele pode representar uma observação real. Primeiro é necessário analisar se o valor é um erro ou se realmente pertence à base."
+#57. Existe diferença entre alunos que trabalham e alunos que não trabalham?
+#58. Essa diferença, caso exista, é suficiente para estabelecer causalidade?
+#59. Por que analisar somente a média pode ser insuficiente?
