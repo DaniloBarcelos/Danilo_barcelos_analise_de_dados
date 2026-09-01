@@ -82,3 +82,249 @@ if len(dados) > 0:
     print("Longitude:", longitude)
 else:
     print("Endereço não encontrado")
+
+# ---------------------------------------------------------
+# Parte 2 - APIs: BrasilAPI (endereco + coordenada) + distancia ate o Ibmec
+# ---------------------------------------------------------
+import pandas as pd
+import requests
+import time
+import math
+
+pd.set_option("display.max_columns", None)
+pd.set_option("display.width", 200)
+
+df_alunos = pd.read_csv("alunos_desempenho.csv")
+df_localidades = pd.read_excel("alunos_localidade_carro_merge.xlsx")
+
+df = pd.merge(df_alunos, df_localidades.drop(columns=["aluno"]), on="id_aluno", how="left")
+
+headers = {"User-Agent": "trabalho_ibmec_202308875965"}
+
+def buscar(url, params=None):
+    for tentativa in range(3):
+        try:
+            resposta = requests.get(url, params=params, headers=headers, timeout=20)
+            if resposta.status_code == 200:
+                return resposta.json()
+        except Exception as e:
+            print("tentativa", tentativa + 1, "falhou:", e)
+        time.sleep(3)
+    return None
+
+# --- BrasilAPI: endereco e coordenada de cada CEP ---
+ceps = df["cep"].unique()
+dados_ceps = []
+
+for cep in ceps:
+    dados = buscar(f"https://brasilapi.com.br/api/cep/v2/{cep}")
+    if dados is None:
+        dados = {}
+
+    coord = dados.get("location", {}).get("coordinates", {})
+    lat = coord.get("latitude")
+    lon = coord.get("longitude")
+
+    dados_ceps.append({
+        "cep": cep,
+        "logradouro": dados.get("street", ""),
+        "bairro": dados.get("neighborhood", ""),
+        "localidade": dados.get("city", ""),
+        "uf": dados.get("state", ""),
+        "latitude": float(lat) if lat else None,
+        "longitude": float(lon) if lon else None
+    })
+    time.sleep(0.5)
+
+df_ceps = pd.DataFrame(dados_ceps)
+df_ceps["endereco"] = (df_ceps["logradouro"] + ", " + df_ceps["bairro"] + ", " +
+                       df_ceps["localidade"] + ", " + df_ceps["uf"])
+
+print("CEPs consultados:", len(df_ceps))
+print("Ja vieram com coordenada:", df_ceps["latitude"].notna().sum())
+
+# --- Nominatim: so para os CEPs que ficaram sem coordenada ---
+url = "https://nominatim.openstreetmap.org/search"
+
+for i in df_ceps[df_ceps["latitude"].isna()].index:
+    params = {"q": df_ceps.loc[i, "endereco"], "format": "json", "limit": 1, "countrycodes": "br"}
+    dados = buscar(url, params)
+    time.sleep(1)
+
+    if dados and len(dados) > 0:
+        df_ceps.loc[i, "latitude"] = float(dados[0]["lat"])
+        df_ceps.loc[i, "longitude"] = float(dados[0]["lon"])
+
+print("Coordenadas no total:", df_ceps["latitude"].notna().sum(), "de", len(df_ceps))
+
+# --- Coordenada do Ibmec ---
+params = {"q": "SIG Quadra 4, Brasilia, DF, Brasil", "format": "json", "limit": 1, "countrycodes": "br"}
+dados = buscar(url, params)
+
+lat_ibmec = float(dados[0]["lat"])
+lon_ibmec = float(dados[0]["lon"])
+
+print("Ibmec - SIG Quadra 4:", lat_ibmec, lon_ibmec)
+
+# --- Distancia ate o Ibmec (Haversine, em km) ---
+distancias = []
+
+for lat, lon in zip(df_ceps["latitude"], df_ceps["longitude"]):
+    if pd.isna(lat):
+        distancias.append(None)
+        continue
+    dlat = math.radians(lat - lat_ibmec)
+    dlon = math.radians(lon - lon_ibmec)
+    a = math.sin(dlat/2)**2 + math.cos(math.radians(lat_ibmec)) * math.cos(math.radians(lat)) * math.sin(dlon/2)**2
+    distancias.append(round(6371 * 2 * math.asin(math.sqrt(a)), 2))
+
+df_ceps["distancia"] = distancias
+df_ceps.to_csv("ceps_geocodificados.csv", index=False)
+
+# --- Tabela final ---
+df_final = pd.merge(df, df_ceps[["cep", "endereco", "latitude", "longitude", "distancia"]],
+                    on="cep", how="left")
+
+tabela = df_final[["id_aluno", "aluno", "faltas", "cep", "endereco",
+                   "latitude", "longitude", "distancia"]].copy()
+
+tabela.columns = ["IDAluno", "Nome", "Faltas", "CEP", "Endereco",
+                  "Latitude", "Longitude", "Distancia_km"]
+
+tabela["Latitude"] = tabela["Latitude"].round(4)
+tabela["Longitude"] = tabela["Longitude"].round(4)
+
+tabela.to_excel("tabela_final_alunos.xlsx", index=False)
+
+display(tabela.head(15))
+display(tabela)                  # as 150
+
+
+
+# ---------------------------------------------------------
+# Parte 2 - APIs: ViaCEP + Nominatim + distancia ate o Ibmec
+# ---------------------------------------------------------
+import pandas as pd
+import requests
+import time
+import math
+
+pd.set_option("display.max_rows", None)      # mostra todas as linhas
+pd.set_option("display.max_columns", None)
+pd.set_option("display.max_colwidth", None)
+pd.set_option("display.width", 250)
+
+df_alunos = pd.read_csv("alunos_desempenho.csv")
+df_localidades = pd.read_excel("alunos_localidade_carro_merge.xlsx")
+
+df = pd.merge(df_alunos, df_localidades.drop(columns=["aluno"]), on="id_aluno", how="left")
+
+headers = {"User-Agent": "trabalho_ibmec_202308875965"}
+
+def buscar(url, params=None):
+    for tentativa in range(3):
+        try:
+            resposta = requests.get(url, params=params, headers=headers, timeout=20)
+            if resposta.status_code == 200:
+                return resposta.json()
+        except Exception as e:
+            print("tentativa", tentativa + 1, "falhou:", e)
+        time.sleep(3)
+    return None
+
+# --- ViaCEP: endereco de cada CEP ---
+ceps = df["cep"].unique()
+dados_ceps = []
+
+for cep in ceps:
+    dados = buscar(f"https://viacep.com.br/ws/{cep}/json/")
+    if dados is None:
+        dados = {}
+    dados_ceps.append({
+        "cep": cep,
+        "logradouro": dados.get("logradouro", ""),
+        "bairro": dados.get("bairro", ""),
+        "localidade": dados.get("localidade", ""),
+        "uf": dados.get("uf", "")
+    })
+    time.sleep(0.5)
+
+df_ceps = pd.DataFrame(dados_ceps)
+df_ceps["endereco"] = (df_ceps["logradouro"] + ", " + df_ceps["bairro"] + ", " +
+                       df_ceps["localidade"] + ", " + df_ceps["uf"])
+
+print("CEPs consultados:", len(df_ceps))
+
+# --- Nominatim: latitude e longitude de cada endereco ---
+url = "https://nominatim.openstreetmap.org/search"
+
+latitudes = []
+longitudes = []
+
+for endereco in df_ceps["endereco"]:
+    lat, lon = None, None
+
+    # tenta o endereco completo e depois so bairro + cidade
+    for busca in [endereco, endereco.split(", ", 1)[1]]:
+        params = {"q": busca, "format": "json", "limit": 1, "countrycodes": "br"}
+        dados = buscar(url, params)
+        time.sleep(1)   # Nominatim pede 1 requisicao por segundo
+
+        if dados and len(dados) > 0:
+            lat = float(dados[0]["lat"])
+            lon = float(dados[0]["lon"])
+            break
+
+    latitudes.append(lat)
+    longitudes.append(lon)
+
+df_ceps["latitude"] = latitudes
+df_ceps["longitude"] = longitudes
+
+# confere se as coordenadas sairam diferentes entre si
+print("Coordenadas distintas:", df_ceps["latitude"].nunique(), "de", len(df_ceps))
+
+# --- Coordenada do Ibmec ---
+params = {"q": "SIG Quadra 4, Brasilia, DF, Brasil", "format": "json", "limit": 1, "countrycodes": "br"}
+dados = buscar(url, params)
+
+lat_ibmec = float(dados[0]["lat"])
+lon_ibmec = float(dados[0]["lon"])
+
+print("Ibmec - SIG Quadra 4:", lat_ibmec, lon_ibmec)
+
+# --- Distancia ate o Ibmec (Haversine, em km) ---
+distancias = []
+
+for lat, lon in zip(df_ceps["latitude"], df_ceps["longitude"]):
+    if lat is None:
+        distancias.append(None)
+        continue
+    dlat = math.radians(lat - lat_ibmec)
+    dlon = math.radians(lon - lon_ibmec)
+    a = math.sin(dlat/2)**2 + math.cos(math.radians(lat_ibmec)) * math.cos(math.radians(lat)) * math.sin(dlon/2)**2
+    distancias.append(round(6371 * 2 * math.asin(math.sqrt(a)), 2))
+
+df_ceps["distancia"] = distancias
+df_ceps.to_csv("ceps_geocodificados.csv", index=False)
+
+print(df_ceps[["cep", "endereco", "latitude", "longitude", "distancia"]])
+
+# --- Tabela final ---
+df_final = pd.merge(df, df_ceps[["cep", "endereco", "latitude", "longitude", "distancia"]],
+                    on="cep", how="left")
+
+tabela = df_final[["id_aluno", "aluno", "faltas", "cep", "endereco",
+                   "latitude", "longitude", "distancia"]].copy()
+
+tabela.columns = ["IDAluno", "Nome", "Faltas", "CEP", "Endereco",
+                  "Latitude", "Longitude", "Distancia_km"]
+
+tabela["Latitude"] = tabela["Latitude"].round(4)
+tabela["Longitude"] = tabela["Longitude"].round(4)
+
+tabela.to_excel("tabela_final_alunos.xlsx", index=False)
+
+print("Total de alunos na tabela:", len(tabela))
+
+display(tabela)   # todos os 150
