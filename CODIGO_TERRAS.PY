@@ -106,7 +106,20 @@ componente = componente.round(2).sort_values(by="diferenca_usd", ascending=False
 print("RESULTADO POR COMPONENTE (2021 a 2025, em US$)")
 print(componente.to_string(index=False))
 print(componente.describe())
-print("TOTAL DEIXADO NA MESA (US$):", round(componente["diferenca_usd"].sum(), 2))
+print("SALDO DA CESTA INTEIRA (US$):", round(componente["diferenca_usd"].sum(), 2))
+
+
+# 4b) OS TRES CENARIOS DE SEPARACAO
+
+filtro_positivo = componente["diferenca_usd"] > 0
+positivos = componente[filtro_positivo]
+print("SEPARAR SO OS DE DIFERENCA POSITIVA (US$):", round(positivos["diferenca_usd"].sum(), 2))
+print("elementos:", positivos["elemento"].tolist())
+
+ima = ["neodimio", "praseodimio", "disprosio", "terbio"]
+filtro_ima = componente["elemento"].isin(ima)
+quatro_de_ima = componente[filtro_ima]
+print("SEPARAR SO OS QUATRO DE IMA (US$):", round(quatro_de_ima["diferenca_usd"].sum(), 2))
 
 
 # 5) RESULTADO POR ANO
@@ -120,7 +133,7 @@ por_ano["pct_da_receita_coberta"] = por_ano["recebido_usd"] / por_ano["exportado
 por_ano = por_ano.round(2)
 print("RESULTADO POR ANO (US$)")
 print(por_ano.to_string(index=False))
-print("atencao: recebido_usd e so a parte da receita atribuida aos 9 elementos com preco,")
+print("atencao: recebido_usd e so a parte da receita atribuida aos elementos com preco publicado,")
 print("por isso e menor que exportado_usd, que e o total que o Brasil faturou no ano")
 
 cobertura = tabela.groupby("ano").agg(pct_do_minerio_coberto=("pct_no_minerio", "sum")).reset_index()
@@ -130,7 +143,7 @@ print(cobertura.to_string(index=False))
 
 print("2022 nao aparece: o Comtrade registra US$ 16.328 com peso liquido zero")
 print("disprosio e terbio nao tem preco em 2025: o USGS parou de publicar")
-print("itrio, erbio, iterbio, holmio, tulio e lutecio sao 19,6% do minerio e o USGS nunca publica preco")
+print("erbio, iterbio, holmio, tulio e lutecio sao 4,21% do minerio e o USGS nao publica preco deles")
 print("o peso usado e o peso bruto do carbonato, nao o teor de TREO contido")
 
 
