@@ -8,8 +8,9 @@ mesmo minerio valeria se fosse refinado. Periodo 2021 a 2025.
 DE ONDE VEM CADA DADO
  - API UN Comtrade (Nacoes Unidas): valor em US$ e peso em kg das exportacoes
    https://comtradeapi.un.org/public/v1/preview/C/A/HS
- - dados_terras_raras.xlsx: preco do oxido refinado (USGS) e composicao do
-   minerio da Serra Verde. O link da fonte esta dentro da propria planilha.
+ - dados_terras_raras.xlsx: preco do oxido refinado (USGS, capitulos Rare Earths,
+   Rare Earths (Heavy) e Yttrium) e composicao do minerio da Serra Verde.
+   O link da fonte esta dentro da propria planilha, na aba fontes.
 
 O arquivo dados_terras_raras.xlsx precisa estar na mesma pasta.
 pip install pandas requests openpyxl matplotlib
@@ -142,8 +143,7 @@ print("QUANTO DO MINERIO A ANALISE CONSEGUE PRECIFICAR EM CADA ANO (%)")
 print(cobertura.to_string(index=False))
 
 print("2022 nao aparece: o Comtrade registra US$ 16.328 com peso liquido zero")
-print("disprosio e terbio nao tem preco em 2025: o USGS parou de publicar")
-print("erbio, iterbio, holmio, tulio e lutecio sao 4,21% do minerio e o USGS nao publica preco deles")
+print("o tulio e o unico elemento sem preco publicado: 0,24% do minerio, fica de fora")
 print("o peso usado e o peso bruto do carbonato, nao o teor de TREO contido")
 
 
